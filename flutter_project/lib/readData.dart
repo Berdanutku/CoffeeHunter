@@ -1,0 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class ReadData extends StatelessWidget {
+   ReadData({Key? key,required this.document}) : super(key: key);
+  final String document;
+  CollectionReference users=FirebaseFirestore.instance.collection("Users");
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<DocumentSnapshot>(
+      future: users.doc(document).get(),
+        builder: (context,snapshot){
+          if(snapshot.connectionState==ConnectionState.done){
+            Map<String,dynamic> data=snapshot.data!.data() as Map<String,dynamic> ;
+             return Center(
+               child: Text("Username: ${data["Username"]}"+ " "
+                   +"\nEmail: ${data["Email"]}"+" "
+                   +"\nAge: ${data["Age"]}"
+                   +"\nGender: ${data["Gender"]}",style: TextStyle(color: Colors.red,fontStyle: FontStyle.italic,fontSize:25),),
+             );
+          }
+      return Text("Loading...");
+    });
+  }
+}
